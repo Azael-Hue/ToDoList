@@ -12,6 +12,7 @@ function processTask() {
     }
 }
 function getTask() {
+    clearErrorMessage();
     let taskTextBox = document.querySelector("#userTask");
     let isValidData = true;
     let userTask = taskTextBox.value;
@@ -32,11 +33,21 @@ function addTask(t) {
     let taskDiv = document.createElement("div");
     let taskElement = document.createElement("p");
     taskElement.textContent = t.task;
-    taskDiv.append(taskElement);
+    taskDiv.appendChild(taskElement);
     let taskElementCheckBox = document.createElement("input");
     taskElementCheckBox.type = "checkbox";
-    taskDiv.append(taskElementCheckBox);
-    if (taskElementCheckBox.checked) {
-    }
+    taskDiv.appendChild(taskElementCheckBox);
+    taskElementCheckBox.addEventListener('change', function () {
+        if (taskElementCheckBox.checked) {
+            taskElement.style.textDecoration = "line-through";
+        }
+        else {
+            taskElement.style.textDecoration = "none";
+        }
+    });
     document.querySelector("#display-tasks").appendChild(taskDiv);
+}
+function clearErrorMessage() {
+    let errorSpan = document.querySelector(".error-message");
+    errorSpan.textContent = "";
 }
