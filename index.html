@@ -7,6 +7,18 @@
     <script src="ts/main.ts"></script>
 </head>
 <body>
+    <h2>Add a task</h2>
 
+    <form>
+        <label for="userTask">Task</label>
+        <input type="text" id="userTask" placeholder="type in a task">
+        <span class="error-message"></span>
+        <br>
+
+        <button type="button" id="add-book">Submit Task</button>
+    </form>
+
+    <!-- Display user tasks -->
+    <div id="display-tasks"></div>
 </body>
 </html>
