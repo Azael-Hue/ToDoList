@@ -29,4 +29,14 @@ function getTask() {
 }
 function addTask(t) {
     console.log(t);
+    let taskDiv = document.createElement("div");
+    let taskElement = document.createElement("p");
+    taskElement.textContent = t.task;
+    taskDiv.append(taskElement);
+    let taskElementCheckBox = document.createElement("input");
+    taskElementCheckBox.type = "checkbox";
+    taskDiv.append(taskElementCheckBox);
+    if (taskElementCheckBox.checked) {
+    }
+    document.querySelector("#display-tasks").appendChild(taskDiv);
 }
