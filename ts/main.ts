@@ -17,6 +17,7 @@ function processTask() {
 }
 
 function getTask(): Task {
+    clearErrorMessage();
     
     // Get the text from the input element
     let taskTextBox = document.querySelector("#userTask") as HTMLInputElement;
@@ -49,27 +50,24 @@ function addTask(t: Task) {
     // Add the task to the page
     let taskDiv:HTMLDivElement =  document.createElement("div");
 
-    /*
-    // Create a title for the task lists
-    let taskListHeading = document.createElement("h2");
-    taskListHeading.innerText = "Tasks";
-    // add the heading to the task div
-    taskDiv.appendChild(taskListHeading);
-    */
-
     // Adds the task to the task div
     let taskElement:HTMLParagraphElement = document.createElement("p");
     taskElement.textContent = t.task;
-    taskDiv.append(taskElement);
+    taskDiv.appendChild(taskElement);
 
     // Adds the checkbox to the task in the task div
     let taskElementCheckBox:HTMLInputElement = document.createElement("input");
     taskElementCheckBox.type = "checkbox";
-    taskDiv.append(taskElementCheckBox);
+    taskDiv.appendChild(taskElementCheckBox);
 
     if (taskElementCheckBox.checked) {
-        // TO BE ADDED: add a string line saying the task is done
+        taskElement.style.textDecoration = "line-through";
     }
 
     document.querySelector("#display-tasks").appendChild(taskDiv);
+}
+
+function clearErrorMessage() {
+    let errorSpan = document.querySelector("span.error-message");
+        errorSpan.textContent = "";
 }

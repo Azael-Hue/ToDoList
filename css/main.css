@@ -1,0 +1,14 @@
+body {
+    width: 90%;
+    margin: auto;
+    padding-top: 1rem;
+    background-color: antiquewhite;
+}
+
+.error-message{
+    color: red;
+}
+
+p{
+    display: inline;
+}
