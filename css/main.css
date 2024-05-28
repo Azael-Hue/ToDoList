@@ -1,8 +1,26 @@
 body {
     width: 90%;
-    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
     padding-top: 1rem;
     background-color: antiquewhite;
+    border: .2rem solid black;
+    box-shadow:  10px 15px #888888;
+}
+
+h2 {
+    text-align: center;
+    color: black;
+}
+
+form{
+    text-align: left;
+    border: 1px solid black;
+    box-shadow:  3px 5px #888888;
+    margin-bottom: 1rem;
+    padding: 1rem;
 }
 
 .error-message{
