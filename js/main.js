@@ -45,7 +45,20 @@ function addTaskToThePage(t) {
             taskElement.style.textDecoration = "none";
         }
     });
-    document.querySelector("#display-tasks").appendChild(taskDiv);
+    let displayDiv = document.querySelector("#display-tasks");
+    displayDiv.innerHTML +=
+        `
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3 mx-auto">
+                <div class="card" style="width: 18rem">
+                    <button type="button" class="btn-close" aria-label="close"></button>
+                    <img src="https://placehold.co/250" class="card-img-top" alt="Just a blank placeholder">
+                    <div class="card-body">
+                        <h5 class="card-title"> Task: ${t.task} </h5>
+                        
+                    </div>
+                </div>
+            </div>
+        `;
 }
 function addTaskToStorage(t) {
     const TaskStorageKey = "Tasks";
