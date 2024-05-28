@@ -5,10 +5,10 @@ window.onload = function () {
     addTaskButton.onclick = processTask;
 };
 function processTask() {
-    console.log("Add task button was clicked");
     let userTask = getTask();
     if (userTask != null) {
-        addTask(userTask);
+        addTaskToThePage(userTask);
+        addTaskToStorage(userTask);
     }
 }
 function getTask() {
@@ -28,7 +28,7 @@ function getTask() {
     }
     return null;
 }
-function addTask(t) {
+function addTaskToThePage(t) {
     console.log(t);
     let taskDiv = document.createElement("div");
     let taskElement = document.createElement("p");
@@ -46,6 +46,14 @@ function addTask(t) {
         }
     });
     document.querySelector("#display-tasks").appendChild(taskDiv);
+}
+function addTaskToStorage(t) {
+    const TaskStorageKey = "Tasks";
+    let taskInfo = localStorage.getItem(TaskStorageKey);
+    let tasks = taskInfo ? JSON.parse(taskInfo) : [];
+    tasks.push(t);
+    taskInfo = JSON.stringify(tasks);
+    localStorage.setItem(TaskStorageKey, taskInfo);
 }
 function clearErrorMessage() {
     let errorSpan = document.querySelector(".error-message");

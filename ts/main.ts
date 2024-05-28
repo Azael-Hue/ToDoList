@@ -22,11 +22,10 @@ window.onload = function() {
  * if the task is not empty it will be added to the list with the addList function
  */
 function processTask() {
-    console.log("Add task button was clicked");
-
     let userTask = getTask();
     if (userTask != null) {
-        addTask(userTask);
+        addTaskToThePage(userTask);
+        addTaskToStorage(userTask);
     }
 }
 
@@ -67,7 +66,7 @@ function getTask(): Task {
  * this function will take in the task that was validated and displays it with a checkbox to its side to be cleared
  * @param t takes in the task that was validated from getTask
  */
-function addTask(t: Task) {
+function addTaskToThePage(t: Task) {
     console.log(t);
 
     // Add the task to the page
@@ -97,6 +96,21 @@ function addTask(t: Task) {
 
     // Display the task in the HTML div similarly to a list
     document.querySelector("#display-tasks").appendChild(taskDiv);
+}
+
+function addTaskToStorage(t: Task):void {
+    const TaskStorageKey = "Tasks";
+    // Read existing tasks from storage
+    let taskInfo = localStorage.getItem(TaskStorageKey);
+
+    // initialize with an existing list of tasks or a new list of tasks if there is none
+    let tasks: Task[] = taskInfo ? JSON.parse(taskInfo) : [];
+
+    tasks.push(t);
+
+    // Add the task to the storage
+    taskInfo = JSON.stringify(tasks);
+    localStorage.setItem(TaskStorageKey, taskInfo);
 }
 
 /**
