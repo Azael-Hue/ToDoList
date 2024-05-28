@@ -10,22 +10,28 @@ class Task {
  * allow the user to click the
  * button which will trigger
  * the processTask function
+ * and load the tasks from the local storage if there is any
  */
-window.onload = function() {
+window.onload = function () {
     let addTaskButton = document.querySelector("#add-task") as HTMLButtonElement;
     addTaskButton.onclick = processTask;
+
+    manageStorage('load');
 }
 
 /**
  * This function will log itself (for troubleshooting)
  * and get the task the user inputted with the getTask function
  * if the task is not empty it will be added to the list with the addList function
+ * and then the text box will be cleared
  */
 function processTask() {
     let userTask = getTask();
     if (userTask != null) {
         addTaskToThePage(userTask);
-        addTaskToStorage(userTask);
+        //addTaskToStorage(userTask);
+        manageStorage('add', userTask);
+        clearTextBox();
     }
 }
 
@@ -36,15 +42,16 @@ function processTask() {
  */
 function getTask(): Task {
     clearErrorMessage();
-    
+
     // Get the text from the input element
     let taskTextBox = document.querySelector("#userTask") as HTMLInputElement;
 
     // Validate data
-    let isValidData:boolean = true;
+    let isValidData: boolean = true;
 
     // Validate the user input for the task
-    let userTask:string = taskTextBox.value;
+    let userTask: string = taskTextBox.value;
+
     if (userTask.trim() == "") {
         isValidData = false;
         let taskErrorSpan = taskTextBox.nextElementSibling;
@@ -55,7 +62,6 @@ function getTask(): Task {
         // Create a new task
         let addedTask = new Task();
         addedTask.task = userTask;
-
         return addedTask;
     }
 
@@ -69,22 +75,37 @@ function getTask(): Task {
 function addTaskToThePage(t: Task) {
     console.log(t);
 
-    // Add the task to the page
-    let taskDiv:HTMLDivElement =  document.createElement("div");
+    // Display the task in cards with a checkbox and a close button
+    let displayDiv = document.querySelector("#display-tasks") as HTMLDivElement;
+    let taskCard = document.createElement("div") as HTMLDivElement;
+    taskCard.className = "col-sm-12 col-md-6 col-lg-4 mb-3 mx-auto";
 
-    // Adds the task to the task div
-    let taskElement:HTMLParagraphElement = document.createElement("p");
-    taskElement.textContent = t.task;
-    taskDiv.appendChild(taskElement);
+    taskCard.innerHTML =
+    `
+        <div class="card" style="width: 18rem">
+            <button type="button" class="btn-close" aria-label="close"></button>
+            <img src="https://placehold.co/250" class="card-img-top" alt="Just a blank placeholder">
+            <div class="card-body">
+                <h5 class="card-title">Task</h5>
+                <p class="card-text">${t.task}</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="check${t.task}">
+                    <label class="form-check-label" for="check${t.task}">
+                        Completed
+                    </label>
+                </div>       
+            </div>
+        </div>
+    `;
 
-    // Adds the checkbox to the task in the task div
-    let taskElementCheckBox:HTMLInputElement = document.createElement("input");
-    taskElementCheckBox.type = "checkbox";
-    taskDiv.appendChild(taskElementCheckBox);
+    displayDiv.appendChild(taskCard);
+
+    let taskElementCheckBox = taskCard.querySelector(".form-check-input") as HTMLInputElement;
+    let taskElement = taskCard.querySelector(".card-text") as HTMLElement;
 
     // checks if the checkbox is checked,
     // if so, it will change the css of the text element to cross it out with a line through
-    taskElementCheckBox.addEventListener('change', function() {
+    taskElementCheckBox.addEventListener('change', function () {
         if (taskElementCheckBox.checked) {
             // If the checkbox is checked, cross out the text
             taskElement.style.textDecoration = "line-through";
@@ -94,37 +115,30 @@ function addTaskToThePage(t: Task) {
         }
     });
 
-    // Display the task in the HTML div similarly to a list
-    // document.querySelector("#display-tasks").appendChild(taskDiv);
-    let displayDiv = document.querySelector("#display-tasks") as HTMLDivElement;
-    displayDiv.innerHTML +=
-        `
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-3 mx-auto">
-                <div class="card" style="width: 18rem">
-                    <button type="button" class="btn-close" aria-label="close"></button>
-                    <img src="https://placehold.co/250" class="card-img-top" alt="Just a blank placeholder">
-                    <div class="card-body">
-                        <h5 class="card-title"> Task: ${t.task} </h5>
-                        
-                    </div>
-                </div>
-            </div>
-        `
 }
 
-function addTaskToStorage(t: Task):void {
+// IF CODE DOES NOT PASS, GRAB A PREVIOUS VERSION OF THIS CODE FROM GITHUB COMMITS
+// ASK JOE ABOUT THIS FUNCTION ELSE IF's ¿loop? STATEMENT
+/**
+ * This function will add tasks to the local storage
+ * if there is no tasks, the function will create a new array for it
+ * if there are tasks in the local storage, it will add the new task to the array
+ * @param action the action determines wether it will add or load tasks from the local storage
+ * @param task if the action is add, the task will be added to the local storage
+ */
+function manageStorage(action: string, task?: Task) {
     const TaskStorageKey = "Tasks";
-    // Read existing tasks from storage
     let taskInfo = localStorage.getItem(TaskStorageKey);
-
-    // initialize with an existing list of tasks or a new list of tasks if there is none
     let tasks: Task[] = taskInfo ? JSON.parse(taskInfo) : [];
 
-    tasks.push(t);
-
-    // Add the task to the storage
-    taskInfo = JSON.stringify(tasks);
-    localStorage.setItem(TaskStorageKey, taskInfo);
+    if (action == 'add' && task) {
+        tasks.push(task);
+        localStorage.setItem(TaskStorageKey, JSON.stringify(tasks));
+    } else if (action == 'load') {
+        for (let task of tasks) {
+            addTaskToThePage(task);
+        }
+    }
 }
 
 /**
@@ -133,4 +147,10 @@ function addTaskToStorage(t: Task):void {
 function clearErrorMessage() {
     let errorSpan = document.querySelector(".error-message");
     errorSpan.textContent = "";
+}
+
+// clears the task input text box
+function clearTextBox() {
+    let taskTextBox = document.querySelector("#userTask") as HTMLInputElement;
+    taskTextBox.value = "";
 }
